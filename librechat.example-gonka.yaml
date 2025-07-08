@@ -14,4 +14,4 @@ endpoints:
       summaryModel: "current_model"
       forcePrompt: false
       modelDisplayLabel: "Gonka AI"
-      iconURL: "https://gonka.ai/images/logo-small.png
+      iconURL: "https://gonka.ai/images/logo-small.png"

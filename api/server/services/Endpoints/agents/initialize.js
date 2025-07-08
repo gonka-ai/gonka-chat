@@ -43,7 +43,7 @@ function createToolLoader() {
   };
 }
 
-const initializeClient = async ({ req, res, endpointOption }) => {
+const initializeClient = async ({ req, res, endpointOption }) => { // IA найти а кто ее вообще то вызывает
   if (!endpointOption) {
     throw new Error('Endpoint option not provided');
   }
@@ -82,6 +82,11 @@ const initializeClient = async ({ req, res, endpointOption }) => {
   /** @type {string} */
   const conversationId = req.body.conversationId;
 
+
+  console.log('api/server/services/Endpoints/agents/initialize.js SAYS IM HERE');
+  console.log('api/server/services/Endpoints/agents/initialize.js SAYS endpointOption', endpointOption);
+  console.log('api/server/services/Endpoints/agents/initialize.js SAYS allowedProviders', allowedProviders);
+  console.log('api/server/services/Endpoints/agents/initialize.js SAYS primaryAgent', primaryAgent);
   const primaryConfig = await initializeAgent({
     req,
     res,
@@ -93,6 +98,7 @@ const initializeClient = async ({ req, res, endpointOption }) => {
     allowedProviders,
     isInitialAgent: true,
   });
+  console.log('api/server/services/Endpoints/agents/initialize.js SAYS primaryConfig', primaryConfig);
 
   const agent_ids = primaryConfig.agent_ids;
   if (agent_ids?.length) {
@@ -114,8 +120,10 @@ const initializeClient = async ({ req, res, endpointOption }) => {
       agentConfigs.set(agentId, config);
     }
   }
+  console.log('api/server/services/Endpoints/agents/initialize.js SAYS primaryConfig.endpoint',primaryConfig.endpoint);
 
   let endpointConfig = req.app.locals[primaryConfig.endpoint];
+  console.log('api/server/services/Endpoints/agents/initialize.js SAYS endpointConfig',endpointConfig);
   if (!isAgentsEndpoint(primaryConfig.endpoint) && !endpointConfig) {
     try {
       endpointConfig = await getCustomEndpointConfig(primaryConfig.endpoint);
@@ -136,6 +144,13 @@ const initializeClient = async ({ req, res, endpointOption }) => {
       modelLabel: endpointOption.model_parameters.modelLabel,
     });
 
+
+  console.log('api/server/services/Endpoints/agents/initialize.js SAYS BEFORE new AgentClient: agent', primaryConfig);
+  console.log('api/server/services/Endpoints/agents/initialize.js SAYS BEFORE new AgentClient: endpointType', endpointOption.endpointType);
+  console.log('api/server/services/Endpoints/agents/initialize.js SAYS BEFORE new AgentClient: endpoint', primaryConfig.id === Constants.EPHEMERAL_AGENT_ID
+        ? primaryConfig.endpoint
+        : EModelEndpoint.agents);
+
   const client = new AgentClient({
     req,
     res,
@@ -146,18 +161,20 @@ const initializeClient = async ({ req, res, endpointOption }) => {
     collectedUsage,
     aggregateContent,
     artifactPromises,
-    agent: primaryConfig,
+    agent: primaryConfig, // IA тут мы передаем agent.endpoint: 'Gonka AI',
     spec: endpointOption.spec,
     iconURL: endpointOption.iconURL,
     attachments: primaryConfig.attachments,
     endpointType: endpointOption.endpointType,
     resendFiles: primaryConfig.resendFiles ?? true,
     maxContextTokens: primaryConfig.maxContextTokens,
-    endpoint:
+    endpoint: // и тут мы передаем Gonka AI
       primaryConfig.id === Constants.EPHEMERAL_AGENT_ID
         ? primaryConfig.endpoint
         : EModelEndpoint.agents,
   });
+
+  console.log('api/server/services/Endpoints/agents/initialize.js SAYS new CLIENT', client);
 
   return { client };
 };

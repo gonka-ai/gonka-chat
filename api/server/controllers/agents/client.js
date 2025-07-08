@@ -138,6 +138,8 @@ class AgentClient extends BaseClient {
     this.indexTokenCountMap = {};
     /** @type {(messages: BaseMessage[]) => Promise<void>} */
     this.processMemory;
+    console.log('api/server/controllers/agents/client.js SAYS in CONSTRUCTOR: agent', this.options.agent);
+    console.log('api/server/controllers/agents/client.js SAYS in CONSTRUCTOR: endpoint', this.options.endpoint);
   }
 
   /**
@@ -447,6 +449,10 @@ class AgentClient extends BaseClient {
       );
     }
 
+    console.log('LOG api/server/controllers/agents/client.js WE ARE HERE');
+    console.log('LOG api/server/controllers/agents/client.js options',this.options); 
+    console.log('LOG api/server/controllers/agents/client.js prelimAgent',this.prelimAgent); 
+    console.log('LOG api/server/controllers/agents/client.js allowedProviders',this.allowedProviders); 
     const agent = await initializeAgent({
       req: this.options.req,
       res: this.options.res,
@@ -532,7 +538,8 @@ class AgentClient extends BaseClient {
   }
 
   /** @type {sendCompletion} */
-  async sendCompletion(payload, opts = {}) {
+  async sendCompletion(payload, opts = {}) {  //IA Возможно тут
+    console.log('api/server/controllers/agents/client.js SAYS I run sendCompletion')
     await this.chatCompletion({
       payload,
       onProgress: opts.onProgress,
@@ -668,7 +675,17 @@ class AgentClient extends BaseClient {
     return currentMessageTokens > 0 ? currentMessageTokens : originalEstimate;
   }
 
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
   async chatCompletion({ payload, abortController = null }) {
+    console.log('api/server/controllers/agents/client.js SAYS I run chatCompletion')
     /** @type {Partial<GraphRunnableConfig>} */
     let config;
     /** @type {ReturnType<createRun>} */
@@ -782,7 +799,9 @@ class AgentClient extends BaseClient {
         if (i === 0) {
           memoryPromise = this.runMemory(messages);
         }
+        
 
+        console.log('api/server/controllers/agents/client.js SAYS BEFORE RUN agent', agent);
         run = await createRun({
           agent,
           req: this.options.req,

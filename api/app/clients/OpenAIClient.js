@@ -1,3 +1,4 @@
+console.log('GONKA: we use OpenAI client');
 const { OllamaClient } = require('./OllamaClient');
 const { HttpsProxyAgent } = require('https-proxy-agent');
 const { SplitStreamHandler, CustomOpenAIClient: OpenAI } = require('@librechat/agents');
@@ -72,6 +73,7 @@ class OpenAIClient extends BaseClient {
     * This keeps Gonka-specific logic isolated in this file.
     */
     this.gonkaPrivateKey = process.env.GONKA_PRIVATE_KEY;
+    console.log('GGONKA: private key', this.gonkaPrivateKey);
   }
 
   // TODO: PluginsClient calls this 3x, unneeded
@@ -1264,6 +1266,9 @@ ${convo}
       *   custom:
       *     - name: "Gonka AI"
       */
+
+      console.log('GGONKA: endpoint', this.options.endpoint);
+      console.log('GGONKA: options', this.options);
       const fetch = (this.options.endpoint === 'Gonka AI')
           ? gonkaFetch({
             gonkaPrivateKey: this.gonkaPrivateKey
@@ -1272,6 +1277,9 @@ ${convo}
           directEndpoint: this.options.directEndpoint,
           reverseProxyUrl: this.options.reverseProxyUrl
         });
+
+      console.log('GGONKA: apiKey', opts); 
+      console.log('GGONKA: opts', opts);
 
       /** @type {OpenAI} */
       const openai = new OpenAI({ 

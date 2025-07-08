@@ -5,11 +5,12 @@ OPENAI_API_KEY=
 GONKA_PRIVATE_KEY=
 GONKA_ENDPOINTS=
 GONKA_ADDRESS=
-sudo cp librechat.example-gonka.yam librechat.yam
-check and fill out parameters in  librechat.yam
+cp librechat.example-gonka.yam librechat.yaml
+check and fill out parameters in  librechat.yaml
 baseURL
 models
 fetch
-npm install
+cp docker-compose.override.yml.example-gonka docker-compose.override.yml
 docker compose build
 docker compose up -d
+reverse proxy 3080 port to the internet

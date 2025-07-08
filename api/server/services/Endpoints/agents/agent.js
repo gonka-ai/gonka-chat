@@ -160,6 +160,7 @@ const initializeAgent = async ({
     });
   }
 
+  console.log('api/server/services/Endpoints/agents/agent.js SAYS agent', agent);
   return {
     ...agent,
     tools,
