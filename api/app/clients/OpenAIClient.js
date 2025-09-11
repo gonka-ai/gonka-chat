@@ -1513,14 +1513,6 @@ ${convo}
           stream: true,
         };
 
-        // TMP LOG: log JSON exactly as it goes to the LLM
-        try {
-          const jsonBody = JSON.stringify(params);
-          console.log('[OpenAIClient] >>> SENDING (stream) to', opts.baseURL, jsonBody);
-        } catch (e) {
-          console.log('[OpenAIClient] >>> SENDING (stream) to', opts.baseURL, '(unstringifiable params)');
-        }
-
         const stream = await openai.chat.completions
           .stream(params)
           .on('abort', () => {
@@ -1613,14 +1605,6 @@ ${convo}
       }
       // regular completion
       else {
-        // TMP LOG: log JSON exactly as it goes to the LLM
-        try {
-          const jsonBody = JSON.stringify(bodyToSend);
-          console.log('[OpenAIClient] >>> SENDING (create) to', opts.baseURL, jsonBody);
-        } catch (e) {
-          console.log('[OpenAIClient] >>> SENDING (create) to', opts.baseURL, '(unstringifiable body)');
-        }
-
         chatCompletion = await openai.chat.completions
           .create({
             ...bodyToSend,
