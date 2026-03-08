@@ -1222,6 +1222,12 @@ ${convo}
         modelOptions.prompt = payload;
       }
 
+      // ==== GONKA: force fixed max_tokens for Gonka AI ====
+      if (this.options.endpoint === 'Gonka AI') {
+        modelOptions.max_tokens = 1000;
+      }
+      // ==== /GONKA ====
+
       const baseURL = extractBaseURL(this.completionsUrl);
       logger.debug('[OpenAIClient] chatCompletion', { baseURL, modelOptions });
       const opts = {
@@ -1232,9 +1238,8 @@ ${convo}
       // Gonka: override baseURL with selected endpoint URL
       let selectedEndpoint;
       if (this.options.endpoint === 'Gonka AI') {
-        const sourceUrl = process.env.GONKA_SOURCE_URL;
-        const result = await resolveAndSelectEndpoint({ sourceUrl });
-        selectedEndpoint = result.selected;
+        const endpoints = JSON.parse(process.env.GONKA_TAGENTS);
+        selectedEndpoint = endpoints[Math.floor(Math.random() * endpoints.length)];
         opts.baseURL = selectedEndpoint.url;
       }
 
