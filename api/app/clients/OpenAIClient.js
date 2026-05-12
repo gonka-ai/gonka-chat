@@ -1224,7 +1224,7 @@ ${convo}
 
       // ==== GONKA: force fixed max_tokens for Gonka AI ====
       if (this.options.endpoint === 'Gonka AI') {
-        modelOptions.max_tokens = 1000;
+        modelOptions.max_tokens = 8192;
       }
       // ==== /GONKA ====
 
@@ -1508,6 +1508,17 @@ ${convo}
       }
       /* ==== /GONKA ==== */
 
+      // TMP DEBUG — request payload
+      console.log('[GONKA-DEBUG] REQUEST:', JSON.stringify({
+        model: bodyToSend.model,
+        max_tokens: bodyToSend.max_tokens,
+        stream: bodyToSend.stream,
+        endpoint: opts.baseURL,
+        messagesCount: bodyToSend.messages?.length,
+        firstMsgRole: bodyToSend.messages?.[0]?.role,
+      }, null, 2));
+      // /TMP DEBUG
+
       if (modelOptions.stream) {
         streamPromise = new Promise((resolve) => {
           streamResolve = resolve;
@@ -1591,6 +1602,16 @@ ${convo}
             }
           } catch { /* no-op */ }
 
+          // TMP DEBUG — each stream chunk
+          console.log('[GONKA-DEBUG] CHUNK:', JSON.stringify({
+            deltaKeys: Object.keys(chunk?.choices?.[0]?.delta || {}),
+            content: chunk?.choices?.[0]?.delta?.content?.substring(0, 50),
+            reasoning: chunk?.choices?.[0]?.delta?.reasoning?.substring(0, 50),
+            reasoning_content: chunk?.choices?.[0]?.delta?.reasoning_content?.substring(0, 50),
+            finish_reason: chunk?.choices?.[0]?.finish_reason,
+          }));
+          // /TMP DEBUG
+
           this.streamHandler.handle(chunk);
           if (abortController.signal.aborted) {
             stream.controller.abort();
@@ -1644,6 +1665,16 @@ ${convo}
 
       const { message, finish_reason } = choices[0] ?? {};
       this.metadata = { finish_reason };
+
+      // TMP DEBUG — stream result summary
+      console.log('[GONKA-DEBUG] RESULT:', JSON.stringify({
+        tokens: this.streamHandler.tokens.length,
+        reasoningTokens: this.streamHandler.reasoningTokens.length,
+        finish_reason,
+        messageContent: message?.content?.substring(0, 100),
+        messageRole: message?.role,
+      }));
+      // /TMP DEBUG
 
       logger.debug('[OpenAIClient] chatCompletion response', chatCompletion);
 
@@ -1712,6 +1743,9 @@ ${convo}
           throw err;
         }
       } else {
+        // TMP DEBUG — unhandled error details
+        console.log('[GONKA-DEBUG] ERROR:', err?.name, err?.message, err?.constructor?.name, err?.stack?.substring(0, 500));
+        // /TMP DEBUG
         logger.error('[OpenAIClient.chatCompletion] Unhandled error type', err);
         throw err;
       }
