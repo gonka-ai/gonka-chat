@@ -1222,11 +1222,7 @@ ${convo}
         modelOptions.prompt = payload;
       }
 
-      // ==== GONKA: force fixed max_tokens for Gonka AI ====
-      if (this.options.endpoint === 'Gonka AI') {
-        modelOptions.max_tokens = 1000;
-      }
-      // ==== /GONKA ====
+
 
       const baseURL = extractBaseURL(this.completionsUrl);
       logger.debug('[OpenAIClient] chatCompletion', { baseURL, modelOptions });
@@ -1590,6 +1586,14 @@ ${convo}
               }
             }
           } catch { /* no-op */ }
+
+          // ==== GONKA: normalize reasoning key to OpenAI standard ====
+          const delta = chunk?.choices?.[0]?.delta;
+          if (delta && 'reasoning' in delta && !('reasoning_content' in delta)) {
+            delta.reasoning_content = delta.reasoning;
+            delete delta.reasoning;
+          }
+          // ==== /GONKA ====
 
           this.streamHandler.handle(chunk);
           if (abortController.signal.aborted) {
