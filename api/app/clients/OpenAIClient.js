@@ -1612,6 +1612,14 @@ ${convo}
           }));
           // /TMP DEBUG
 
+          // ==== GONKA: normalize reasoning key to OpenAI standard ====
+          const delta = chunk?.choices?.[0]?.delta;
+          if (delta && 'reasoning' in delta && !('reasoning_content' in delta)) {
+            delta.reasoning_content = delta.reasoning;
+            delete delta.reasoning;
+          }
+          // ==== /GONKA ====
+
           this.streamHandler.handle(chunk);
           if (abortController.signal.aborted) {
             stream.controller.abort();
