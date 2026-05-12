@@ -1222,11 +1222,7 @@ ${convo}
         modelOptions.prompt = payload;
       }
 
-      // ==== GONKA: force fixed max_tokens for Gonka AI ====
-      if (this.options.endpoint === 'Gonka AI') {
-        modelOptions.max_tokens = 16384;
-      }
-      // ==== /GONKA ====
+
 
       const baseURL = extractBaseURL(this.completionsUrl);
       logger.debug('[OpenAIClient] chatCompletion', { baseURL, modelOptions });

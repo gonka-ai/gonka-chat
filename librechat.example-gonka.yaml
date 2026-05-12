@@ -13,30 +13,35 @@ endpoints:
       models:
         default:
           [
-            'Qwen/QwQ-32B',
-            'Qwen/Qwen2.5-7B-Instruct'
+            'Qwen/Qwen3-235B-A22B-Instruct-2507-FP8',
+            'moonshotai/Kimi-K2.6',
           ]
         fetch: false
       titleConvo: true
-      titleModel: "Qwen/Qwen2.5-7B-Instruct" # non-reasonable modele should be used as titleModel
+      titleModel: "Qwen/Qwen3-235B-A22B-Instruct-2507-FP8"
       summarize: false
       summaryModel: "current_model"
       forcePrompt: false
       modelDisplayLabel: "Gonka AI"
       iconURL: "https://gonka.ai/images/01-favicon.png"
+      addParams:
+        max_tokens: 16384
+        thinking:
+          type: "disabled"
 modelSpecs:
   prioritize: true
   list:
-    - name: "qwen-32b"
-      label: "Qwen/QwQ-32B"
+    - name: "Qwen3-235B-Instruct"
+      label: "Qwen3-235B-Instruct"
       default: true
       preset:
         endpoint: "Gonka AI"
-        model: "Qwen/QwQ-32B"
-        modelLabel: "Qwen/QwQ-32B"
-    - name: "qwen-7b"
-      label: "Qwen/Qwen2.5-7B-Instruct"
+        model: "Qwen/Qwen3-235B-A22B-Instruct-2507-FP8"
+        modelLabel: "Qwen3-235B-Instruct"
+    - name: "Kimi-K2.6"
+      label: "Kimi-K2.6"
+      default: false
       preset:
         endpoint: "Gonka AI"
-        model: "Qwen/Qwen2.5-7B-Instruct"
-        modelLabel: "Qwen/Qwen2.5-7B-Instruct"
+        model: "moonshotai/Kimi-K2.6"
+        modelLabel: "Kimi-K2.6"
