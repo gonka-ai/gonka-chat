@@ -1224,7 +1224,7 @@ ${convo}
 
       // ==== GONKA: force fixed max_tokens for Gonka AI ====
       if (this.options.endpoint === 'Gonka AI') {
-        modelOptions.max_tokens = 8192;
+        modelOptions.max_tokens = 16384;
       }
       // ==== /GONKA ====
 
