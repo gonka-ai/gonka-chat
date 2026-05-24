@@ -1351,12 +1351,7 @@ ${convo}
       *   custom:
       *     - name: "Gonka AI"
       */
-      const fetch = (this.options.endpoint === 'Gonka AI')
-          ? gonkaFetch({
-            gonkaPrivateKey: this.gonkaPrivateKey,
-            selectedEndpoint
-          })
-        : createFetch({
+      const fetch = createFetch({
           directEndpoint: this.options.directEndpoint,
           reverseProxyUrl: this.options.reverseProxyUrl
         });
